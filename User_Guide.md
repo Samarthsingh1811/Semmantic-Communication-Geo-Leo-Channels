@@ -147,7 +147,32 @@ The training script defaults to searching for images in `/dataset/CIFAR10/`. Whe
 
 ---
 
-## 4. How to Run the Model
+## 5. Jupyter Notebooks & Analysis
+
+The repository includes several Jupyter notebooks for evaluating the models and comparing them against traditional digital baselines.
+
+### Evaluation & Comparison
+
+- **`colab_comparison.ipynb`**: Recommended for Google Colab users. It automates the process of loading trained weights and plotting their performance (PSNR/SSIM) against pre-calculated BPG baselines.
+- **`compare_models.ipynb`**: Used to compare the robustness of different model variations (Mixed, LEO-specific, GEO-specific, AWGN) when tested on a specific difficult channel like **LEO**.
+- **`full_comparison.ipynb`**: A rigorous benchmarking tool that compares Neural SemViT performance against the traditional digital baseline (BPG+LDPC) under matched bandwidth constraints on an AWGN channel.
+
+### Visualization & Baselines
+
+- **`visual_gallery.ipynb`**: Demonstrates the "Graceful Degradation" property of semantic communications. It provides a side-by-side visual comparison of:
+  1.  **Original Image**
+  2.  **Digital Reconstruction (JPEG)**: Shows the "Digital Cliff" effect (complete failure at low SNR).
+  3.  **SemViT Reconstruction**: Shows how the image remains intelligible even as noise increases.
+- **`bpg-ldpc.ipynb`**: Houses the simulation logic for the traditional digital baseline using BPG source coding and LDPC channel coding. This notebook was used to generate the benchmark data for the comparison notebooks.
+- **`generalization_matrix.ipynb`**: Analyzes how a model trained on one type of channel (e.g., AWGN) generalizes when tested on another (e.g., Rayleigh or Satellite).
+
+### Analysis Tools
+
+- **`visual_comparison_grid.ipynb`**: Generates high-resolution grids of original vs. reconstructed images for publication and report quality visualization.
+
+---
+
+## 6. How to Run the Model
 
 ### Training
 
