@@ -33,7 +33,7 @@ def dataset_generator(dir, mode=None, shuffle=True):
                 labels='inferred',
                 color_mode='rgb',
                 batch_size=BATCH_SIZE,
-                image_size=(32, 32),
+                image_size=(512, 512),
                 shuffle=shuffle,
                 interpolation='bilinear',
                 validation_split=0.1,
@@ -47,7 +47,7 @@ def dataset_generator(dir, mode=None, shuffle=True):
                 labels='inferred',
                 color_mode='rgb',
                 batch_size=BATCH_SIZE,
-                image_size=(32, 32), 
+                image_size=(512, 512), 
                 shuffle=shuffle,
                 interpolation='bilinear'
             )

@@ -1,0 +1,190 @@
+# Semantic Communications with Vision Transformer - User Guide
+
+This repository implements a Deep Joint Source-Channel Coding (JSCC) system using Vision Transformers (SemViT) for semantic communications. It supports various channel models (AWGN, Rayleigh, Satellite, etc.) and hardware implementation via USRP.
+
+## 1. Repository Structure
+
+### Directories
+
+- **`models/`**: Contains the core deep learning model definitions.
+  - `model.py`: Defines the `SemViT` class, the main Autoencoder architecture (Encoder -> Channel -> Decoder).
+  - `vitblock.py`: Implementation of the Vision Transformer blocks.
+  - `channellayer.py`: Differentiable channel layers (AWGN, Rayleigh, Satellite, etc.) used during training.
+  - `metrics.py`: Custom metrics like PSNR and SSIM.
+- **`vision_sim/`**: Scripts for simulating visual transmissions.
+  - `channel_sim.py`: Standalone script to simulate channel effects (AWGN) on binary IQ files (`iq_tx.bin` → `iq_rx.bin`).
+  - `tx_vision.py` / `rx_vision.py`: Scripts likely used for transmitting and receiving vision data in a simulation loop.
+- **`usrp/`**: Drivers and interfacing code for Universal Software Radio Peripheral (USRP) hardware.
+  - `usrp_driver.py`: The main driver script that bridges a TCP client (simulation) to the physical USRP hardware using the `uhd` library.
+  - `client.py`, `server.py`: Networking utilities for the hardware setup.
+- **`utils/`**: Helper functions.
+  - `datasets.py`: Data loaders for CIFAR-10.
+  - `networking.py`: TCP communication helpers.
+  - `qam_modem_tf.py`: QAM modulation/demodulation utilities (if used).
+- **`analysis/`**: Scripts for analyzing trained model performance (PSNR, SSIM, Latent Structure, etc.).
+- **`config/`**: Configuration files (e.g., `train_config.py`, `usrp_config.py`).
+- **`weights/`**: Directory where trained model weights are saved.
+
+### Key Files
+
+- **`train_dist.py`**: The main entry point for training the model.
+- **`download_cifar10.py`**: Utility script to download and organize the CIFAR-10 dataset.
+- **`run_colab_experiments.bash`**: Example shell script for running multiple experiments sequentially.
+
+---
+
+## 2. Installation & Setup
+
+### Prerequisites
+
+- **Python**: Version 3.8 or higher is recommended (tested with Python 3.10).
+- **CUDA/cuDNN**: If you plan to train on GPU, ensure you have the appropriate CUDA and cuDNN versions compatible with TensorFlow 2.11.
+
+### Setting up a Virtual Environment
+
+It is highly recommended to use a virtual environment to manage dependencies and avoid conflicts.
+
+#### Option A: Using `venv` (Standard Python)
+
+1.  **Create the environment**:
+    ```bash
+    python3 -m venv venv
+    ```
+2.  **Activate the environment**:
+    - On macOS/Linux:
+      ```bash
+      source venv/bin/activate
+      ```
+    - On Windows:
+      ```bash
+      .\venv\Scripts\activate
+      ```
+
+#### Option B: Using `conda` (Anaconda/Miniconda)
+
+1.  **Create the environment**:
+    ```bash
+    conda create -n semantic-comms python=3.10
+    ```
+2.  **Activate the environment**:
+    ```bash
+    conda activate semantic-comms
+    ```
+
+### Installing Dependencies
+
+Once your environment is active, install the required packages using `pip`:
+
+```bash
+pip install -r requirements.txt
+```
+
+**Key Dependencies Installed:**
+
+- `tensorflow==2.11.0` (Core ML framework)
+- `tensorflow-compression==2.11.0` (For entropy coding/GDN layers)
+- `sionna==0.14.0` (Library for 5G/6G channel modeling)
+- `keras-cv`, `matplotlib`, `numpy`, `tqdm`, etc.
+
+### Special Note for USRP Hardware
+
+If you intend to use the USRP hardware (scripts in `usrp/`), you must have the **UHD (USRP Hardware Driver)** installed on your system. This is a system-level dependency, not just a Python package.
+
+- **Ubuntu/Debian**: `sudo apt-get install libuhd-dev uhd-host`
+- **macOS**: `brew install uhd`
+- **Python Bindings**: After installing the system library, ensure the Python `uhd` module is accessible. Often this is installed via `conda install -c conda-forge uhd` or built from source.
+
+## 3. Model Architecture (SemViT)
+
+The model is a Semantic Video/Image Transformer (SemViT) designed for JSCC. It behaves as an Autoencoder:
+
+1.  **Encoder**: Compresses the input image (512x512x3) into a sequence of complex symbols (IQ samples). It uses a mix of Convolutional blocks (`C`) and Vision Transformer blocks (`V`) as defined by the user. The ViT blocks have been enhanced with a **Shifted Window mechanism** (inspired by Swin Transformer) for improved efficiency and modeling of long-range dependencies.
+2.  **Channel**: A differentiable layer that simulates physical channel distortions:
+    - **AWGN**: Additive White Gaussian Noise.
+    - **Rayleigh**: Fading channel.
+    - **Satellite/GEO/LEO**: Specialized channels for satellite communications.
+3.  **Decoder**: Receives the noisy symbols and reconstructs the original image.
+
+**Key Architecture Updates:**
+
+- **Shifted Window Mechanism**: ViT blocks now utilize shifted window attention to calculate self-attention within local windows, providing cross-window connections and reducing computational complexity for high-resolution images like 512x512.
+- **Support for High-Resolution Inputs**: The model is optimized for 512x512 input dimensions, providing significantly higher reconstruction detail than standard CIFAR-scale models.
+
+**Key Parameters:**
+
+- `block_types`: A string of 6 characters defining the layers (e.g., `CCVVCC` = 2 Conv, 2 ViT, 2 Conv).
+- `snrdB`: Signal-to-Noise Ratio in dB used during training.
+- `data_size`: Total number of complex symbols sent (bandwidth).
+
+---
+
+## 3. Data Structure
+
+The project is currently configured for **512x512 high-resolution images**.
+
+### Recommended Data Setup
+
+While the repository includes scripts for CIFAR-10, it is recommended to use high-resolution datasets (e.g., DIV2K, CLIC, or custom datasets) to leverage the model's 512x512 input support.
+
+To use custom images, organize them into a directory structure:
+
+```text
+dataset/
+└── custom_data/
+    ├── train/
+    │   ├── class_a/
+    │   └── ...
+    └── test/
+        ├── class_a/
+        └── ...
+```
+
+### Note on `train_dist.py`
+
+The training script defaults to searching for images in `/dataset/CIFAR10/`. When using 512x512 resolution, ensure your data directory contains appropriately sized images. The `utils/datasets.py` script will automatically resize images to 512x512 if they differ.
+
+**Recommendation**: Update the path in `train_dist.py` or create a symlink to your high-resolution dataset.
+
+---
+
+## 4. How to Run the Model
+
+### Training
+
+To train the model, use `train_dist.py`.
+
+**Usage:**
+
+```bash
+python train_dist.py [data_size] [channel_type] [snr] [block_types] [experiment_name] [epochs] --filters [list] --repetitions [list]
+```
+
+**Example (from `run_colab_experiments.bash`):**
+Training a model with `CCVVCC` structure, 512 symbols, 10dB SNR, on a Satellite channel:
+
+```bash
+python train_dist.py 512 Satellite 10 CCVVCC "experiment_name" 130 \
+    --filters 256 256 256 256 256 256 \
+    --repetitions 1 1 3 3 1 1
+```
+
+### Hardware Simulation (USRP)
+
+To run with USRP hardware (requires `uhd` installed):
+
+1.  **Driver**: Start the USRP driver script to initialize the hardware and listen for data.
+    ```bash
+    python usrp/usrp_driver.py
+    ```
+2.  **Client**: Run your transmission/inference script (e.g., customized `main.py` or client script) that connects to the driver via TCP to send/receive IQ samples.
+
+### Pure Simulation
+
+To test the channel simulation without training:
+
+1.  Generate/Provide an IQ file `vision_sim/iq_tx.bin`.
+2.  Run the simulator:
+    ```bash
+    python vision_sim/channel_sim.py --snr 10.0
+    ```
+3.  The output will be saved to `vision_sim/iq_rx.bin`.

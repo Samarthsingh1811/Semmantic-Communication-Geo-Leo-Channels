@@ -15,7 +15,7 @@ def main(args):
   if args.gpu:
     os.environ["CUDA_VISIBLE_DEVICES"]=args.gpu
 
-  # Load CIFAR-10 dataset
+  # Load high-resolution dataset
   train_ds, test_ds = prepare_dataset()
 
   EXPERIMENT_NAME = args.experiment_name
@@ -89,7 +89,7 @@ def prepare_dataset():
     return image
 
   train_ds = (
-    train_ds.shuffle(50000, reshuffle_each_iteration=True)
+    train_ds.shuffle(buffer_size=1000, reshuffle_each_iteration=True)
             .map(lambda x, y: (normalize_and_augment(x, training=True), y), num_parallel_calls=AUTO)
             .map(lambda x, _: (x, x))
             .prefetch(AUTO)

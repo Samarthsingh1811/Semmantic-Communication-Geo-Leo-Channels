@@ -83,16 +83,16 @@ class SemViT_Encoder(tf.keras.layers.Layer):
                  num_symbols, gdn_func=None, **kwargs):
         super().__init__()
         self.layers = [
-            # 32 x 32 input
-            build_blocks(0, block_types, num_blocks, filters, 32, kernel_size=9, stride=2, gdn_func=gdn_func),
-            # downsampled to 16 x 16
-            build_blocks(1, block_types, num_blocks, filters, 16, kernel_size=5, stride=2, gdn_func=gdn_func),
-            # downsampled to 8 x 8
-            build_blocks(2, block_types, num_blocks, filters, 8, kernel_size=5, gdn_func=gdn_func),
+            # 512 x 512 input
+            build_blocks(0, block_types, num_blocks, filters, 512, kernel_size=9, stride=2, gdn_func=gdn_func),
+            # downsampled to 256 x 256
+            build_blocks(1, block_types, num_blocks, filters, 256, kernel_size=5, stride=2, gdn_func=gdn_func),
+            # downsampled to 128 x 128
+            build_blocks(2, block_types, num_blocks, filters, 128, kernel_size=5, gdn_func=gdn_func),
             # to constellation
             tf.keras.layers.Conv2D(
-                filters=num_symbols // 8 // 8 * 2,
-                # current spatial dimension is 8 x 8
+                filters=num_symbols // 128 // 128 * 2,
+                # current spatial dimension is 128 x 128
                 # and 2 for iq dimension
                 kernel_size=1
             )
@@ -117,14 +117,14 @@ class SemViT_Decoder(tf.keras.layers.Layer):
     def __init__(self, block_types, filters, num_blocks, gdn_func=None, **kwargs):
         super().__init__()
         self.layers = [
-            # 8 x 8 input
-            build_blocks(0, block_types, num_blocks, filters, 8, kernel_size=5, gdn_func=gdn_func),
-            # upsampled to 16 x 16
-            tf.keras.layers.Resizing(16, 16),
-            build_blocks(1, block_types, num_blocks, filters, 16, kernel_size=5, gdn_func=gdn_func),
-            # upsampled to 32 x 32
-            tf.keras.layers.Resizing(32, 32),
-            build_blocks(2, block_types, num_blocks, filters, 32, kernel_size=9, gdn_func=gdn_func),
+            # 128 x 128 input
+            build_blocks(0, block_types, num_blocks, filters, 128, kernel_size=5, gdn_func=gdn_func),
+            # upsampled to 256 x 256
+            tf.keras.layers.Resizing(256, 256),
+            build_blocks(1, block_types, num_blocks, filters, 256, kernel_size=5, gdn_func=gdn_func),
+            # upsampled to 512 x 512
+            tf.keras.layers.Resizing(512, 512),
+            build_blocks(2, block_types, num_blocks, filters, 512, kernel_size=9, gdn_func=gdn_func),
             # to image
             tf.keras.layers.Conv2D(
                 filters=3,
@@ -136,7 +136,7 @@ class SemViT_Decoder(tf.keras.layers.Layer):
 
     def call(self, x):
         b, c, _ = x.shape
-        x = tf.reshape(x, (-1, 8, 8, c*2//64))
+        x = tf.reshape(x, (-1, 128, 128, c*2//(128*128)))
 
         for sublayer in self.layers:
             x = sublayer(x)
