@@ -2,6 +2,7 @@
 
 This repository implements a Deep Joint Source-Channel Coding (JSCC) system using Vision Transformers (SemViT) for semantic communications. It supports various channel models (AWGN, Rayleigh, Satellite, etc.) and hardware implementation via USRP.
 <img width="452" height="252" alt="image" src="https://github.com/user-attachments/assets/6e6c2693-a228-4211-be36-4b569f9e9256" />
+<img width="459" height="233" alt="image" src="https://github.com/user-attachments/assets/2bdc8e8a-65f8-4a2c-8bc5-c4e488f449bc" />
 
 
 ## 1. Repository Structure
