@@ -11,6 +11,8 @@ This repository implements a Deep Joint Source-Channel Coding (JSCC) system usin
 <p align="center">
   <img src="image-1.png" alt="alt text">
 </p>
+
+
 ## 1. Repository Structure
 
 ### Directories
