@@ -5,6 +5,13 @@ This repository implements a Deep Joint Source-Channel Coding (JSCC) system usin
 <img width="459" height="233" alt="image" src="https://github.com/user-attachments/assets/2bdc8e8a-65f8-4a2c-8bc5-c4e488f449bc" />
 
 
+<p align="center">
+  <img src="image.png" alt="High Level Framework of the System">
+</p>
+
+<p align="center">
+  <img src="image-1.png" alt="alt text">
+</p>
 ## 1. Repository Structure
 
 ### Directories
