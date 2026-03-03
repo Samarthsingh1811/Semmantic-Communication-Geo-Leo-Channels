@@ -252,7 +252,7 @@ This section presents a rigorous analysis of the semantic extractor (**YOLOv11n*
 The training dynamics of the YOLOv11n model were monitored over 100 epochs to assess its learning stability and generalization capabilities. As illustrated below, training exhibits strong convergence across three critical loss components: Box Loss, Classification Loss (Cls), and Distribution Focal Loss (DFL).
 
 <p align="center">
-  <img src="training_loss.png" alt="Training Loss Curves">
+  <img src="images/Screenshot%202026-03-03%20at%2023.16.32.png" alt="Training Loss Curves">
 </p>
 
 #### Object Detection Metrics
@@ -261,14 +261,14 @@ The training dynamics of the YOLOv11n model were monitored over 100 epochs to as
 The proposed Goal-Oriented Pipeline achieves a high Area Under the Curve (AUC). Crucially, the system maintains high precision even at higher recall rates (0.8 ~ 0.9). By staying well above 0.9 in precision during this plateau, the system minimizes bandwidth wastage from false positive transmissions. The semantic mechanism is trained to prioritize confident fire detections, ensuring a bandwidth-efficient pipeline that transmits fewer "false alarms".
 
 <p align="center">
-  <img src="pr_curve.png" alt="Precision-Recall Curve">
+  <img src="images/image%20copy%204.png" alt="Precision-Recall Curve">
 </p>
 
 **F1-Score Tuning**  
 The performance balance was calibrated using the F1-Score curve. Real-world validation demonstrates that an optimal confidence threshold is situated at 0.45 ~ 0.5. Values below 0.45 detect more faint smoke signals but introduce unacceptable noise (dropping precision and F1), while higher thresholds risk overlooking legitimate early-state fires (dropping recall). 
 
 <p align="center">
-  <img src="f1_curve.png" alt="F1 Score vs Confidence Threshold">
+  <img src="images/image%20copy%205.png" alt="F1 Score vs Confidence Threshold">
 </p>
 
 #### Semantic Feature Activations
@@ -278,14 +278,14 @@ To validate the efficiency of the Semantic Gatekeeper, we analysed the spatial f
 This sparsity validates the *Semantic Gating* core thesis: our framework actively suppresses irrelevant background information, reallocating transmission budgets strictly to task-relevant Regions of Interest (ROI) such as fires or physical subjects, rather than sending useless raw pixel data.
 
 <p align="center">
-  <img src="semantic_features.png" alt="Deep Semantic feature activations">
+  <img src="images/Screenshot%202026-03-03%20at%2023.02.29.png" alt="Deep Semantic feature activations">
 </p>
 
 *(a) Detection bounding boxes forming the Semantic ROI.*  
 *(b) The final SemViT decoder reconstruction on the ground station side.*
 
 <p align="center">
-  <img src="reconstruction_demo.png" alt="Reconstruction of Fire and Smoke">
+  <img src="images/image.png" alt="Reconstruction of Fire and Smoke">
 </p>
 
 ### JSCC Transmission Performance
@@ -296,13 +296,13 @@ To evaluate channel-mode transmission efficiency, we define the Bandwidth Ratio 
 When compared under harsh noise (0 dB AWGN—typical of long-distance LEO/GEO environments) against conventional baseline constraints (BPG+LDPC), the proposed Generalist model outperforms digital boundaries. While traditional BPG digital techniques suffer the 'digital cliff' effect (complete failure at low SNR or bandwidth), the proposed model maintains smooth continuous reconstruction stability, highlighting the benefits of Analog Joint Source-Channel Coding (JSCC).
 
 <p align="center">
-  <img src="ssim_vs_bandwidth.png" alt="SSIM against Bandwidth Ratio">
+  <img src="images/image%20copy.png" alt="SSIM against Bandwidth Ratio">
 </p>
 
 Additionally, the Mixed Generalist architecture was cross-tested under specific satellite constraints—LEO (Fast Rayleigh fading) and GEO (Slow Rician fading) channels. In contradiction to specialized 'domain-locked' theories, the **Mixed (LEO+GEO) architecture** achieved State-of-the-Art (SOTA) consistency, scoring top performance across changing links (e.g., LEO fading at 33.3 dB and GEO stable limits at 29.8 dB), outperforming previous approaches such as DeepJSCC across all parameters.
 
 <p align="center">
-  <img src="performance_benchmarks.png" alt="PSNR and SSIM Comparisons across SNR and Channels">
+  <img src="images/Screenshot%202026-03-03%20at%2023.05.42.png" alt="PSNR and SSIM Comparisons across SNR and Channels">
 </p>
 
 ---
