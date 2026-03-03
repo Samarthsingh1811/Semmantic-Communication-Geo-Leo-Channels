@@ -254,3 +254,63 @@ The training dynamics of the YOLOv11n model were monitored over 100 epochs to as
 <p align="center">
   <img src="training_loss.png" alt="Training Loss Curves">
 </p>
+
+#### Object Detection Metrics
+
+**Precision-Recall Analysis**  
+The proposed Goal-Oriented Pipeline achieves a high Area Under the Curve (AUC). Crucially, the system maintains high precision even at higher recall rates (0.8 ~ 0.9). By staying well above 0.9 in precision during this plateau, the system minimizes bandwidth wastage from false positive transmissions. The semantic mechanism is trained to prioritize confident fire detections, ensuring a bandwidth-efficient pipeline that transmits fewer "false alarms".
+
+<p align="center">
+  <img src="pr_curve.png" alt="Precision-Recall Curve">
+</p>
+
+**F1-Score Tuning**  
+The performance balance was calibrated using the F1-Score curve. Real-world validation demonstrates that an optimal confidence threshold is situated at 0.45 ~ 0.5. Values below 0.45 detect more faint smoke signals but introduce unacceptable noise (dropping precision and F1), while higher thresholds risk overlooking legitimate early-state fires (dropping recall). 
+
+<p align="center">
+  <img src="f1_curve.png" alt="F1 Score vs Confidence Threshold">
+</p>
+
+#### Semantic Feature Activations
+
+To validate the efficiency of the Semantic Gatekeeper, we analysed the spatial feature maps extracted from the deep layers of the YOLOv11 backbone. As illustrated below, the activations are highly sparse, with the majority of the feature space exhibiting near-zero values.
+
+This sparsity validates the *Semantic Gating* core thesis: our framework actively suppresses irrelevant background information, reallocating transmission budgets strictly to task-relevant Regions of Interest (ROI) such as fires or physical subjects, rather than sending useless raw pixel data.
+
+<p align="center">
+  <img src="semantic_features.png" alt="Deep Semantic feature activations">
+</p>
+
+*(a) Detection bounding boxes forming the Semantic ROI.*  
+*(b) The final SemViT decoder reconstruction on the ground station side.*
+
+<p align="center">
+  <img src="reconstruction_demo.png" alt="Reconstruction of Fire and Smoke">
+</p>
+
+### JSCC Transmission Performance
+
+To evaluate channel-mode transmission efficiency, we define the Bandwidth Ratio (R), which calculates the ratio of utilized channel bandwidth (channel uses) to the original image dimensions. A lower bandwidth ratio implies superior compression.
+
+**Reconstruction vs Channel Noise (AWGN 0 dB)**  
+When compared under harsh noise (0 dB AWGN—typical of long-distance LEO/GEO environments) against conventional baseline constraints (BPG+LDPC), the proposed Generalist model outperforms digital boundaries. While traditional BPG digital techniques suffer the 'digital cliff' effect (complete failure at low SNR or bandwidth), the proposed model maintains smooth continuous reconstruction stability, highlighting the benefits of Analog Joint Source-Channel Coding (JSCC).
+
+<p align="center">
+  <img src="ssim_vs_bandwidth.png" alt="SSIM against Bandwidth Ratio">
+</p>
+
+Additionally, the Mixed Generalist architecture was cross-tested under specific satellite constraints—LEO (Fast Rayleigh fading) and GEO (Slow Rician fading) channels. In contradiction to specialized 'domain-locked' theories, the **Mixed (LEO+GEO) architecture** achieved State-of-the-Art (SOTA) consistency, scoring top performance across changing links (e.g., LEO fading at 33.3 dB and GEO stable limits at 29.8 dB), outperforming previous approaches such as DeepJSCC across all parameters.
+
+<p align="center">
+  <img src="performance_benchmarks.png" alt="PSNR and SSIM Comparisons across SNR and Channels">
+</p>
+
+---
+
+## Conclusion
+
+This research project successfully addresses the critical bottleneck of high-resolution image transmission over bandwidth-constrained and noisy space-to-ground links. By shifting the communication paradigm from traditional "bit-level accuracy" to "semantic fidelity," we developed a robust Deep Learning-based framework capable of maintaining mission-critical intelligence even in deep fading regimes where traditional protocols collapse. 
+
+The integration of a YOLOv11 edge-intelligence module converts our network from a continuous stream format to an *Event-Triggered* architecture. By discarding non-relevant background frames at the satellite source, this Semantic Gating mechanism inherently reduces downlink data volume and overhead during active surveillance. 
+
+This work lays the foundation for Cognitive Satellite Communication Networks. Future iterations will introduce Adaptive Semantic Coding, whereby a satellite dynamically adjusts compression symbol sizes and semantic routing based on automated real-time channel estimation metrics, embedding active edge-intelligence directly into the physical ISRO communication layer.
