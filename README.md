@@ -224,3 +224,33 @@ To test the channel simulation without training:
     python vision_sim/channel_sim.py --snr 10.0
     ```
 3.  The output will be saved to `vision_sim/iq_rx.bin`.
+
+---
+
+## 7. Results and Analysis
+
+### Dataset and Experimental Setup
+
+The proposed models are trained on an A100 GPU using the TensorFlow framework and a custom dataset for training the YOLO model. This enables the model to perform highly accurate object detection (specifically identifying subjects, fire, and smoke) across varying environments.
+
+For the semantic communication framework, we primarily trained our models on the **DIV2K** dataset, which consists of images with varying resolutions from 720p to 1440p. We then tested our models using the **Kodak PhotoCD** dataset.
+
+Our architecture is adapted for different channel conditions, resulting in four specialized models:
+- **AWGN-trained model**
+- **Low Earth Orbit (LEO) trained model**
+- **Geostationary Orbit (GEO) trained model**
+- **Generalist model**: Combines the robust properties of both LEO and GEO models. 
+
+Our evaluations indicate that the **Generalist model** is the best-performing approach. We have also compared this model with state-of-the-art (SOTA) models in semantic communication, as well as conventional image compression techniques such as **Better Portable Graphics (BPG)**. BPG's primary goal is to exceed standard JPEG efficiency, yielding smaller payloads with significantly higher visual quality. In our testing architecture, BPG acts as the source encoder while **Low-Density Parity-Check (LDPC) codes** function as the channel encoder, effectively protecting the compressed image data from transmission corruption. The models were trained under fixed channel state constraints (SNR = 10 dB) using the Adam Optimizer (learning rate: $1 \times 10^{-4}$, batch size: 16 for DIV2K).
+
+### Analysis
+
+This section presents a rigorous analysis of the semantic extractor (**YOLOv11n**) to validate the trained model's effectiveness and accuracy. The evaluation includes performance benchmarking on unseen data, a comprehensive review of training and performance metrics, and a detailed examination of the model's spatial attention mechanisms using feature map visualization.
+
+#### Training Stability and Loss Convergence
+
+The training dynamics of the YOLOv11n model were monitored over 100 epochs to assess its learning stability and generalization capabilities. As illustrated below, training exhibits strong convergence across three critical loss components: Box Loss, Classification Loss (Cls), and Distribution Focal Loss (DFL).
+
+<p align="center">
+  <img src="training_loss.png" alt="Training Loss Curves">
+</p>
