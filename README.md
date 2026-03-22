@@ -1,6 +1,6 @@
 # Semantic Communications with Vision Transformer - User Guide
 
-![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10-3776AB?style=flat&logo=python&logoColor=white)
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.11-FF6F00?style=flat&logo=tensorflow&logoColor=white)
 ![Keras](https://img.shields.io/badge/Keras-2.11-D00000?style=flat&logo=keras&logoColor=white)
 ![Sionna](https://img.shields.io/badge/Sionna-0.14-00B4D8?style=flat&logoColor=white)
