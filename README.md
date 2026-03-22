@@ -11,9 +11,9 @@
 ![Channels](https://img.shields.io/badge/Channels-AWGN%20%7C%20LEO%20%7C%20GEO-1E90FF?style=flat&logoColor=white)
 ![TensorBoard](https://img.shields.io/badge/TensorBoard-2.11-FF6F00?style=flat&logo=tensorflow&logoColor=white)
 
-This repository implements a Deep Joint Source-Channel Coding (JSCC) system using Vision Transformers (SemViT) for semantic communications. It supports various channel models (AWGN, Rayleigh, Satellite, etc.) and hardware implementation via USRP.
+This repository implements a Deep Joint Source-Channel Coding (JSCC) system using Vision Transformers (ViT) for semantic communications. It supports various channel models (AWGN, Rayleigh, Satellite, etc.) and hardware implementation via USRP.
 
-
+We use CNNs as local receptive fields to capture local information and later in the pipeline we use ViT for global information and semantic compression. This is how we perform Joint Source and Channel coding, now as future goal , I would like to add a pilot signal which checks the channel condition before starting the transmission to do adaptive channel and source coding.
 
 <p align="center">
   <img src="image.png" alt="High Level Framework of the System">
