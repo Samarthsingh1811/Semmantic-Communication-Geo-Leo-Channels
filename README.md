@@ -1,5 +1,10 @@
 # Semantic Communications with Vision Transformer - User Guide
 
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python&logoColor=white)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-FF6F00?style=flat&logo=tensorflow&logoColor=white)
+![USRP](https://img.shields.io/badge/USRP-Deployed-00A86B?style=flat&logo=gnuradio&logoColor=white)
+![GPU](https://img.shields.io/badge/Trained%20on-A100%20GPU-76B900?style=flat&logo=nvidia&logoColor=white)
+
 This repository implements a Deep Joint Source-Channel Coding (JSCC) system using Vision Transformers (SemViT) for semantic communications. It supports various channel models (AWGN, Rayleigh, Satellite, etc.) and hardware implementation via USRP.
 
 
