@@ -1,9 +1,15 @@
 # Semantic Communications with Vision Transformer - User Guide
 
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python&logoColor=white)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-FF6F00?style=flat&logo=tensorflow&logoColor=white)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-2.11-FF6F00?style=flat&logo=tensorflow&logoColor=white)
+![Keras](https://img.shields.io/badge/Keras-2.11-D00000?style=flat&logo=keras&logoColor=white)
+![Sionna](https://img.shields.io/badge/Sionna-0.14-00B4D8?style=flat&logoColor=white)
+![OpenCV](https://img.shields.io/badge/OpenCV-4.6-5C3EE8?style=flat&logo=opencv&logoColor=white)
+![CUDA](https://img.shields.io/badge/CUDA-Enabled-76B900?style=flat&logo=nvidia&logoColor=white)
 ![USRP](https://img.shields.io/badge/USRP-Deployed-00A86B?style=flat&logo=gnuradio&logoColor=white)
-![GPU](https://img.shields.io/badge/Trained%20on-A100%20GPU-76B900?style=flat&logo=nvidia&logoColor=white)
+![YOLOv11](https://img.shields.io/badge/YOLOv11-Semantic%20Extractor-FF4500?style=flat&logoColor=white)
+![Channels](https://img.shields.io/badge/Channels-AWGN%20%7C%20LEO%20%7C%20GEO-1E90FF?style=flat&logoColor=white)
+![TensorBoard](https://img.shields.io/badge/TensorBoard-2.11-FF6F00?style=flat&logo=tensorflow&logoColor=white)
 
 This repository implements a Deep Joint Source-Channel Coding (JSCC) system using Vision Transformers (SemViT) for semantic communications. It supports various channel models (AWGN, Rayleigh, Satellite, etc.) and hardware implementation via USRP.
 
